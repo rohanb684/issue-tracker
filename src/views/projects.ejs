@@ -1,0 +1,106 @@
+<div id="project-wrapper">
+    <div id="project-container">
+      <!-- --project--header--- -->
+        <div id="project-header">
+          <div id="add-button-div">
+            <button data-bs-toggle="modal"
+            data-bs-target="#projectModal" id="add-button">Add Project</button>
+          </div>
+            <div id="search-project">
+              <form class="d-flex" role="search" method="get" action="/project/search-keyword">
+                <input  name="keyword"  id="keyword" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success" type="submit">Search</button>
+              </form>
+            </div>
+        </div>
+      <!-- --project--header--- -->
+
+        <!-- ----new project--- -->
+      <% if(projects != null){ %>  
+        <% projects.forEach(project =>{%>
+        <div class="project">
+          <div class="project-upper">
+            <div class="project-title">
+              <h2><%=project.title%></h2>
+            </div>
+            <div class="project-author">
+              <h6>Created by: <%=project.author%></h6>
+            </div>
+          </div>
+          <div class="project-mid">
+            <div class="project-desc">
+              <p><%=project.description%></p>
+            </div>
+          </div>
+          <div class="project-lower">
+            <div class="more-details">
+              <a href="/project/<%=project._id%>" class="more-details-a">More Details</a>
+            </div>
+            
+          </div>
+        </div>
+        <% }); %>
+        <%}else{%>
+          <div class="no-projects">
+            <h1>No Projects avaialable</h1>
+          </div>
+        <%}%>
+        <!-- ----new project--- -->
+       
+    </div>
+</div>
+<!-- --Modal for new project-- -->
+<div
+  class="modal fade"
+  id="projectModal"
+  tabindex="-1"
+  aria-labelledby="projectModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5 text-success" id="exampleModalLabel">
+          Create new Project
+        </h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form action="/" method="post" class="p-2">
+          <div class="mb-3">
+            <div class="input-group">
+              <span class="input-group-text">Title</span>
+              <input
+                required
+                name="title"
+                type="text"
+                aria-label="text"
+                class="form-control"
+                placeholder="Enter project title"
+              />
+            </div>
+          </div>
+          <textarea class="form-control" name="description" required placeholder="Enter project description" id="floatingTextarea"></textarea>
+          
+
+          <button type="submit" class="btn btn-md mt-2 lbtn">Add</button>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-sm btn-danger"
+          data-bs-dismiss="modal"
+        >
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- --Modal for new project-- -->

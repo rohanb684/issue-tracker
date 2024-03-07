@@ -1,0 +1,220 @@
+<div id="single-project-wrapper">
+    <div id="project-details-container">
+        <div id="single-project-title">
+            <h2><%=project.title%></h2>
+        </div>
+        <div id="single-project-description">
+            <h4><%=project.description%></h4>
+        </div>
+
+        <!-- ----lables-- -->
+        <% if(project.labels.length > 0){ %>  
+        <div id="label-header">
+            <h5>Labels:</h5>
+        </div>
+        
+        <div class="labels">
+          <% project.labels.forEach(label=>{ %>  
+            <div class="label">
+                <p class="label-name"><%=label%></p>
+            </div>
+          <% }) %>
+        </div>
+    </div>
+    <% } %>
+    <!-- ----lables-- -->
+
+    <!-- -----comments container--- -->
+    <div id="comments-container">
+        <div id="comments-header">
+
+            <div id="comments-header-left">
+                <div id="create-issue-div">
+                    <button data-bs-toggle="modal"
+                data-bs-target="#issueModal" id="create-issue-btn">Create Issue</button>
+                </div>
+                <div id="filter-label-div">
+                    <button data-bs-toggle="modal"
+                data-bs-target="#filterModal" id="filter-label-btn">Filter by label</button>
+                </div>
+              </div>
+        </div>
+
+        <% if(labels != null){ %> 
+        <div id="applied-filters">
+          <div id="applied-left">
+          <div id="filter-header"><h5>Applied Filters: </h5></div>
+          <div class="labels">
+            <% if(Array.isArray(labels)){ %> 
+            <% labels.forEach(label=>{ %>  
+              <div class="label">
+                  <p class="label-name"><%=label%></p>
+              </div>
+            <% })}else{ %>
+              <div class="label">
+                <p class="label-name"><%=labels%></p>
+            </div>
+              <% } %>
+          </div>
+        </div>
+        <div id="applied-right">
+          <a href="/project/<%=project._id%>" id="remove-filter">Remove Filters</a>
+        </div>
+        </div>
+        <% } %>
+        <!-- ---comments--- -->
+        <div id="comments">
+
+          <!-- --single--comment-- -->
+          <% if(issues){ %> 
+          <% issues.forEach(issue=>{ %>  
+            <div class="comment">
+                <div class="comment-top">
+                    <div class="issue-title">
+                        <h5><%=issue.title%></h5>
+                    </div>
+                    <div class="delete-comment">
+                        <form action="/project/<%=project._id%>/delete-issue/<%=issue._id%>?_method=DELETE" method="post"> 
+                            <input type="hidden" name="_method" value="DELETE">
+                            <button type="submit" class="delete-btn">Remove</button>
+                        </form>
+                    </div>
+                </div>
+                
+                <div class="issue-description">
+                    <p><%=issue.description%></p>
+                </div>
+                <div class="issue-label-header">
+                    <h7> Issue Labels:</h7>
+                </div>
+                <div class="labels">
+
+                  <% issue.labels.forEach(label=>{ %>  
+                    <div class="label">
+                        <p class="label-name"><%=label%></p>
+                    </div>
+                  <% }) %>
+                    
+                </div>
+                <div class="issue-creator">
+                    <p>Created by: <Strong><%=issue.author%></Strong></p>
+                </div>
+            </div>
+            <% })}else{ %>
+            <!-- --single--comment-- -->
+          
+              <div id="no-issues">
+                <h2>No issues avaialable</h2>
+              </div>
+              <% } %>
+         </div>
+<!-- ---comments--- -->
+
+
+    </div>
+    <!-- -----comments container--- -->
+    
+</div>
+
+
+<!-- --Modal for new issue-- -->
+<div
+  class="modal fade"
+  id="issueModal"
+  tabindex="-1"
+  aria-labelledby="projectModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5 text-success" id="exampleModalLabel">
+          Create new Issue
+        </h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form action="/project/<%=project._id%>/create-issue" method="post" class="p-2">
+          <div class="mb-3">
+            <div class="input-group">
+              <span class="input-group-text">Title</span>
+              <input
+                required
+                name="title"
+                type="text"
+                aria-label="text"
+                class="form-control"
+                placeholder="Enter issue title"
+              />
+            </div>
+          </div>
+          <textarea class="form-control mb-3" name="description" required placeholder="Enter issue description" id="floatingTextarea"></textarea>
+          <textarea class="form-control" name="labels" required placeholder="Enter labels seperated by comma" id="floatingTextarea"></textarea>
+          <button type="submit" class="btn btn-md mt-2 lbtn">Add</button>
+        </form>
+      </div>
+       <!-- ----lables-- -->
+       <% if(project.labels.length > 0){ %>  
+        <div id="modal-label-header">
+            <h5>Current Project Labels:</h5>
+        </div>
+        
+        <div class="labels">
+          <% project.labels.forEach(label=>{ %>  
+            <div class="label">
+                <p class="label-name"><%=label%></p>
+            </div>
+          <% }) %>
+        </div>
+    </div>
+    <% } %>
+    <!-- ----lables-- -->
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn btn-sm btn-danger"
+          data-bs-dismiss="modal"
+        >
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- --Modal for new issue-- -->
+
+
+<!-- ---Modal for filter by label--- -->
+<% if(project.labels.length > 0){ %>  
+<div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Filter By label</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form method="get" action="/project/<%=project._id%>/filter-label">
+          
+          <% project.labels.forEach(label=>{ %>  
+          <div class="mb-3 form-check">
+            <input type="checkbox"  name="label" value="<%=label%>" class="form-check-input" id="<%=label%>">
+            <label class="form-check-label" for="<%=label%>"><%=label%></label>
+          </div>
+          <%})%>
+          <button type="submit" class="btn btn-primary">Filter</button>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<% } %>  
+<!-- ---Modal for filter by label--- -->
